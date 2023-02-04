@@ -6,6 +6,7 @@ Dir home;
 Dir *curs;
 string com;
 string cl;
+string path = "/home";
 bool loop = true;
 
 
@@ -13,17 +14,16 @@ bool loop = true;
 int main(){
     home.id = "home";
     curs = &home;
-    mkdir("home" , curs);
-    cd("home" , curs);
     mkdir("dante", curs);
-    cd("dante", curs);
+    cd("dante", curs , path);
     mkdir("desktop" , curs);
     mkdir("docs" , curs);
     mkdir("downloads" , curs);
 
 // buscar una forma más eficiente de hacer la selección de comandos
     while(loop){
-        cout << "/ ";
+        //cout << path << "@ ";  // hasta corregir el bug de la ruta absoluta se usa esto
+        cout << curs->anterior->id<< "/" << curs->id << "@ ";
         cin >> com ;
         if (com == "ls"){
             ls(curs);
@@ -51,7 +51,7 @@ int main(){
         if(com == "cd"){
             //cout << " ";
             cin >> cl;
-            cd(cl , curs);
+            cd(cl , curs, path);
         }
         
         if(com == "cls"){ // en teoría esto solo debería funcionar en linux (hacer genérico a cualquier sistema)
