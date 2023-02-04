@@ -117,9 +117,12 @@ void ls( Dir* curs){
 
 
 
-void cd (string clav , Dir* &curs){
+void cd (string clav , Dir* &curs , string &path){
     if (clav == ".." && curs->anterior != nullptr){  // válido para todos los directorios salvo el inicial
         curs = curs->anterior; // se vuelve al directorio anterior
+        string aux = curs->id;
+        path.erase(path.length() - aux.length() - 1); // funciona pero bug (mientras más se usa peor funciona)
+        
     }
     else{
         Dir mk;
@@ -132,6 +135,7 @@ void cd (string clav , Dir* &curs){
 
         else{
             curs = &ck->dato;
+            path += "/" + curs->id;
         }
 
     }
