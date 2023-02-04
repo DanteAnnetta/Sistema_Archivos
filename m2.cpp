@@ -29,17 +29,36 @@ int main(){
             ls(curs);
         }
         if (com == "mkdir"){
-            cout << " ";
+            //cout << " ";
             cin >> cl;
             mkdir(cl , curs);
         }
+        if (com == "mkfile"){
+            //cout << " ";
+            cin >> cl;
+            mkfile(cl , curs);
+        }
+        if (com == "rmdir"){
+            //cout << " ";
+            cin >> cl;
+            rmdir(cl , curs);
+        }
+        if (com == "rmfile"){
+            //cout << " ";
+            cin >> cl;
+            rmfile(cl , curs);
+        }
         if(com == "cd"){
-            cout << " ";
+            //cout << " ";
             cin >> cl;
             cd(cl , curs);
         }
+        
+        if(com == "cls"){ // en teoría esto solo debería funcionar en linux (hacer genérico a cualquier sistema)
+            system("clear");
+        }
+        
         if (com == "exit"){
-            //loop = false;
             break;
         }
 
