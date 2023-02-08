@@ -135,6 +135,9 @@ void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
     Nodo<File>* f;
     Nodo<File>* p = lista;
     f = buscar<File>(mf , curs->archs , criterio_arch);
+    if (!f){
+        cout << "error: no se encontro el archivo" << endl;
+    }
     int i;
     int in;
     int j;
