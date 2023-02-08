@@ -1,0 +1,138 @@
+g++ -std=c++17 -Wall m2.cpp arch.hpp disk.hpp listascomp.hpp listasordc.hpp rwstring.hpp -o ejec.run
+In file included from arch.hpp:7,
+                 from m2.cpp:2:
+disk.hpp:51:6: error: variable or field ‘mostrar_archivo’ declared void
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |      ^~~~~~~~~~~~~~~
+disk.hpp:51:23: error: ‘Dir’ was not declared in this scope
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                       ^~~
+disk.hpp:51:28: error: ‘curs’ was not declared in this scope
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                            ^~~~
+disk.hpp:51:41: error: expected primary-expression before ‘clav’
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                                         ^~~~
+disk.hpp:51:53: error: ‘File’ was not declared in this scope
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                                                     ^~~~
+disk.hpp:51:57: error: template argument 1 is invalid
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                                                         ^
+disk.hpp:51:60: error: ‘lista’ was not declared in this scope
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                                                            ^~~~~
+disk.hpp:73:6: error: variable or field ‘crear_file’ declared void
+   73 | void crear_file(File & f){
+      |      ^~~~~~~~~~
+disk.hpp:73:17: error: ‘File’ was not declared in this scope
+   73 | void crear_file(File & f){
+      |                 ^~~~
+disk.hpp:73:24: error: ‘f’ was not declared in this scope
+   73 | void crear_file(File & f){
+      |                        ^
+disk.hpp:107:6: error: variable or field ‘eliminar_archivo’ declared void
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |      ^~~~~~~~~~~~~~~~
+disk.hpp:107:24: error: ‘Dir’ was not declared in this scope
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                        ^~~
+disk.hpp:107:28: error: ‘curs’ was not declared in this scope
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                            ^~~~
+disk.hpp:107:41: error: expected primary-expression before ‘clav’
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                                         ^~~~
+disk.hpp:107:54: error: ‘File’ was not declared in this scope
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                                                      ^~~~
+disk.hpp:107:58: error: template argument 1 is invalid
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                                                          ^
+disk.hpp:107:61: error: ‘lista’ was not declared in this scope
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                                                             ^~~~~
+In file included from m2.cpp:2:
+arch.hpp: In function ‘void mkfile(std::string, Dir*, Nodo<File>*&)’:
+arch.hpp:54:9: error: ‘crear_file’ was not declared in this scope
+   54 |         crear_file(mf);
+      |         ^~~~~~~~~~
+In file included from m2.cpp:2:
+arch.hpp: In function ‘void rmfile(std::string, Dir*, Nodo<File>*&)’:
+arch.hpp:108:9: error: ‘eliminar_archivo’ was not declared in this scope
+  108 |         eliminar_archivo( curs , clav, listafls);
+      |         ^~~~~~~~~~~~~~~~
+m2.cpp: In function ‘int main()’:
+m2.cpp:60:13: error: ‘mostrar_archivo’ was not declared in this scope
+   60 |             mostrar_archivo(curs , cl , listafs);
+      |             ^~~~~~~~~~~~~~~
+In file included from arch.hpp:7:
+disk.hpp:51:6: error: variable or field ‘mostrar_archivo’ declared void
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |      ^~~~~~~~~~~~~~~
+disk.hpp:51:23: error: ‘Dir’ was not declared in this scope
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                       ^~~
+disk.hpp:51:28: error: ‘curs’ was not declared in this scope
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                            ^~~~
+disk.hpp:51:41: error: expected primary-expression before ‘clav’
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                                         ^~~~
+disk.hpp:51:53: error: ‘File’ was not declared in this scope
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                                                     ^~~~
+disk.hpp:51:57: error: template argument 1 is invalid
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                                                         ^
+disk.hpp:51:60: error: ‘lista’ was not declared in this scope
+   51 | void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
+      |                                                            ^~~~~
+disk.hpp:73:6: error: variable or field ‘crear_file’ declared void
+   73 | void crear_file(File & f){
+      |      ^~~~~~~~~~
+disk.hpp:73:17: error: ‘File’ was not declared in this scope
+   73 | void crear_file(File & f){
+      |                 ^~~~
+disk.hpp:73:24: error: ‘f’ was not declared in this scope
+   73 | void crear_file(File & f){
+      |                        ^
+disk.hpp:107:6: error: variable or field ‘eliminar_archivo’ declared void
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |      ^~~~~~~~~~~~~~~~
+disk.hpp:107:24: error: ‘Dir’ was not declared in this scope
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                        ^~~
+disk.hpp:107:28: error: ‘curs’ was not declared in this scope
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                            ^~~~
+disk.hpp:107:41: error: expected primary-expression before ‘clav’
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                                         ^~~~
+disk.hpp:107:54: error: ‘File’ was not declared in this scope
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                                                      ^~~~
+disk.hpp:107:58: error: template argument 1 is invalid
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                                                          ^
+disk.hpp:107:61: error: ‘lista’ was not declared in this scope
+  107 | void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
+      |                                                             ^~~~~
+arch.hpp: In function ‘void mkfile(std::string, Dir*, Nodo<File>*&)’:
+arch.hpp:54:9: error: ‘crear_file’ was not declared in this scope
+   54 |         crear_file(mf);
+      |         ^~~~~~~~~~
+arch.hpp: In function ‘void rmfile(std::string, Dir*, Nodo<File>*&)’:
+arch.hpp:108:9: error: ‘eliminar_archivo’ was not declared in this scope
+  108 |         eliminar_archivo( curs , clav, listafls);
+      |         ^~~~~~~~~~~~~~~~
+In file included from disk.hpp:10:
+arch.hpp: In function ‘void mkfile(std::string, Dir*, Nodo<File>*&)’:
+arch.hpp:54:9: error: ‘crear_file’ was not declared in this scope
+   54 |         crear_file(mf);
+      |         ^~~~~~~~~~
+In file included from disk.hpp:10:
+arch.hpp: In function ‘void rmfile(std::string, Dir*, Nodo<File>*&)’:
+arch.hpp:108:9: error: ‘eliminar_archivo’ was not declared in this scope
+  108 |         eliminar_archivo( curs , clav, listafls);
+      |         ^~~~~~~~~~~~~~~~
