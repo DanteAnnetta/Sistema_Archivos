@@ -2,5 +2,6 @@
 
 Cosas a seguir cambiando:
 - La función eliminar_archivo tiene que ser capaz de renombrar las imágenes del disco asi como poder eliminarlas
-- Solucionar problemas de compilación 
 - Terminar m3.cpp para poder procesar los comandos de una forma más amigable y menos tediosa
+- la función mostrar_archivo no funciona correctamente (muestra el último archivo escrito en ese directorio). 
+- Agregarle una medida de seguridad a todas aquellas funciones que ejecuten la función de búsqueda, porque en caso de no encontrar el puntero se puede producir un segmentation fault.
