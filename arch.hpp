@@ -4,15 +4,15 @@
 #include <iostream>
 #include "listascomp.hpp"
 #include "listasordc.hpp"
+#include "disk.hpp"
 using namespace std;
 
 
 
 struct File{
     string id;
-    // declaracion del dato (agregar de alguna forma)
-    //Nodo<Dir> * carpeta = nullptr;  // esto en teoría no es necesario, porque se cuenta
-    // con el puntero de la carpeta en la que se encuentra el archivo
+    int ini;
+    int fin;
 };
 
 struct Dir{
@@ -43,13 +43,15 @@ int criterio_arch(File a , File b){
 
 
 
-void mkfile(string clav , Dir*curs){
+void mkfile(string clav , Dir*curs , Nodo<File>* &listafls){
     File mf;
     Nodo<File> * ck;
     mf.id = clav;
     ck = buscar<File>(mf , curs->archs , criterio_arch);
     if(ck == nullptr){
         insertar<File>(mf , curs->archs , criterio_arch);
+        push<File>(listafls , mf);
+        crear_file(mf);
     }
     else{
         cout << "error: ya existe un archivo con este nombre" << endl;
@@ -92,7 +94,7 @@ void rmdir(string clav , Dir* curs){
 }
 
 
-void rmfile(string clav , Dir* curs){
+void rmfile(string clav , Dir* curs, Nodo<File>* &listafls){
     File mf;
     Nodo<File> * ck;
     mf.id = clav;
@@ -102,6 +104,8 @@ void rmfile(string clav , Dir* curs){
     }
     else{
         borrar<File>(mf , curs->archs , criterio_arch);
+        borrar<File>(mf , listafls , criterio_arch);
+        eliminar_archivo( curs , clav, listafls);
     }
 }
 

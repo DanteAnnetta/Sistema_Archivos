@@ -52,4 +52,6 @@ template <typename T> void agregar(Nodo<T>*& cola, T valor)
 	}
 }
 
+
+
 #endif // LISTASUTIL_HPP_INCLUDED

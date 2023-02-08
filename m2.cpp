@@ -4,6 +4,7 @@ using namespace std;
 
 Dir home;
 Dir *curs;
+Nodo<File>* listafs;
 string com;
 string cl;
 string path = "/home";
@@ -36,7 +37,7 @@ int main(){
         if (com == "mkfile"){
             //cout << " ";
             cin >> cl;
-            mkfile(cl , curs);
+            mkfile(cl , curs ,  listafs);
         }
         if (com == "rmdir"){
             //cout << " ";
@@ -46,12 +47,17 @@ int main(){
         if (com == "rmfile"){
             //cout << " ";
             cin >> cl;
-            rmfile(cl , curs);
+            rmfile(cl , curs ,  listafs);
         }
         if(com == "cd"){
             //cout << " ";
             cin >> cl;
             cd(cl , curs, path);
+        }
+        if(com == "cat"){
+            //cout << " ";
+            cin >> cl;
+            mostrar_archivo(curs , cl , listafs);
         }
         
         if(com == "cls"){ // en teoría esto solo debería funcionar en linux (hacer genérico a cualquier sistema)
