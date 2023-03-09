@@ -16,12 +16,20 @@ struct File{
     int fin;
 };
 
-struct Dir{
+struct Dir{  // la id de una carpeta podría ser su nivel concatenado con su nombre
     string id;
     Dir * anterior = nullptr;
     Nodo<Dir> * sigs = nullptr;
-    Nodo<File> * archs = nullptr;
+    int iter = 0;
+    int nivel = 0; // indicador de nivel, para poder reconstruir el arbol (persistencia)
 };
+
+struct Regdir{  // estructura que se utilizará para la persistencia del arbol
+    string id;
+    string anterior;
+    int nivel;
+};
+
 
 // es conveniente utilizar esto en conjunto con la función mostrar
 ostream& operator << (ostream &os , Dir d){
@@ -34,6 +42,11 @@ ostream& operator << (ostream &os , File f){
     return os;
 }
 
+ostream& operator << (ostream &os , Regdir r){
+    os << " " << r.id << "  " << r.nivel << "   " << r.anterior;
+    return os;
+}
+
 int criterio_carpeta(Dir a , Dir b){
     return a.id.compare(b.id);
 }
@@ -41,6 +54,38 @@ int criterio_carpeta(Dir a , Dir b){
 int criterio_arch(File a , File b){
     return a.id.compare(b.id);
 }
+
+// probar como funciona
+int criterio_nivel(Regdir a , Regdir b){
+    if (a.nivel < b.nivel){
+        return -1;
+    }
+    else{
+        if (a.nivel == b.nivel){
+            return 0;
+        }
+        else{
+            return 1;
+        }
+    }
+}
+
+
+// función de conversión de datos para la persistencia
+void operator >> (Dir d , Regdir& r){
+    if(!d.anterior){
+        r.anterior = "";
+    }
+    else{
+        r.anterior = d.anterior->id;
+    }
+    r.id = d.id;
+    r.nivel = d.nivel;
+}
+
+
+
+
 
 
 
@@ -67,141 +112,21 @@ fstream& operator << (fstream& fs , Line l){
 }
 
 
-
-
-void mostrar_archivo (Dir* curs, string clav , Nodo<File>* lista){   // función para leer el contenido de un archivo
-    Line aux;
-    File mf;
-    mf.id = clav;
-    Nodo<File>* f;
-    f = buscar<File>(mf , curs->archs , criterio_arch);
-    fstream file1;
-    file1.open("disk.bin" , ios::binary | ios::in);
-    if(!file1){
-        cout << "Error: no se pudo abrir el archivo" << endl;
-    }
-    int i = 0;
-    while(file1 >> aux){
-        if (i -1 > f->dato.ini && i -1 < f->dato.fin){  
-            cout << aux.cont << endl;
-        }
-        i ++;
-    }
-    file1.close();
-
-}
-
-void crear_file(File & f){
-    Line aux;
-    fstream file1;
-    int ini = 0;
-    int fin;
-    file1.open("disk.bin" , ios::binary | ios::out);
-    while(file1 >> aux){
-        ini++;
-    }
-    f.ini = ini; // se registra a partir de que linea comienza el archivo
-    fin = ini;
-    file1.close();
-    
-    file1.open("disk.bin" , ios::binary | ios::app);
-
-    string dat = "";
-    int q = 0;
-    //while (dat!=":q"){   //----------------------------------------------------------------------------
-    while (q < 10){   // este método no funciona
-        cout << "/" ;
-        cin.getline(lin , lline , '\n');
-        for(int i = 0; i< lline ;i++){
-            dat += lin[i];
-        }
-        aux.cont = dat;
-        file1 << aux;
-        aux.cont = "";
-        dat = "";
-
-        fin++;
-        q++;
-    }
-    f.fin = fin;   // el archivo queda definido en su extensión y queda agregado al "disco"
-    file1.close();
-
-}
-
-void eliminar_archivo( Dir*curs, string clav ,  Nodo<File>* lista){
-    Line aux;
-    File mf;
-    mf.id = clav;
-    Nodo<File>* f;
-    Nodo<File>* p = lista;
-    f = buscar<File>(mf , curs->archs , criterio_arch);
-    if (!f){
-        cout << "error: no se encontro el archivo" << endl;
-    }
-    int i;
-    int in;
-    int j;
-    fstream file1;
-    fstream file2;
-
-
-
-    file2.open("disk2.bin", ios::binary | ios::in);
-    while(p->sig){  // se buscan los archivos de la lista uno por uno
-        if (p->dato.ini == f->dato.ini && p->dato.fin == f->dato.fin){ // si el archivo a eliminar es igual al de la lista lo pasa
-            continue;
-        }
-        else{
-            file1.open("disk.bin" , ios::binary | ios::out);
-            j = 0;
-            in = i;
-            while(file1>>aux){
-                if (j -1 > p->dato.ini && j -1 < p->dato.fin){  
-                    //cout << aux.cont << endl;
-                    file2 << aux; // se escribe el dato en el segundo archivo
-                    i++;
-                }
-                j ++;
-            }
-            p->dato.ini = in;
-            p->dato.fin = i;
-            file1.close();
-        }
-    }
-    
-    remove("disk.bin");
-    //rename("disk2.bin" , "disk.bin");  //-----------------------------------------------------------------------------------------------------------------
-}
-
-
-
-
-
-void mkfile(string clav , Dir*curs , Nodo<File>* &listafls){
-    File mf;
-    Nodo<File> * ck;
-    mf.id = clav;
-    ck = buscar<File>(mf , curs->archs , criterio_arch);
-    if(ck == nullptr){
-        insertar<File>(mf , curs->archs , criterio_arch);
-        push<File>(listafls , mf);
-        crear_file(mf);
-    }
-    else{
-        cout << "error: ya existe un archivo con este nombre" << endl;
-    }
-}
-
-
-void mkdir(string clav , Dir* curs){
+void mkdir(string clav , Dir* curs , Nodo<Regdir>* &listac){
     Dir mk;
+    Regdir r;
     Nodo<Dir> * ck; // esto se encarga de chequear que una carpeta es única
     mk.id = clav;
     mk.anterior = curs;
-    //agregar<Dir>(curs->sigs, mk);
+    mk.nivel = curs->nivel + 1;
     ck = buscar<Dir>( mk , curs->sigs , criterio_carpeta);
+    //cout << "Creando " << clav << endl;
     if(ck == nullptr){
         insertar<Dir>(mk , curs->sigs , criterio_carpeta);
+        mk >> r;
+        if(listac){ // cuando se carga el arbol (persistencia) los datos ya estan en la lista, no hay que editarlos
+            insertar<Regdir>(r , listac , criterio_nivel);
+        }
     }
     else{
         cout << "error: esa carpeta ya existe" << endl;
@@ -209,8 +134,9 @@ void mkdir(string clav , Dir* curs){
 
 }
 
-void rmdir(string clav , Dir* curs){
+void rmdir(string clav , Dir* curs, Nodo<Regdir>* listac){
     Dir mk;
+    Regdir r;
     Nodo<Dir> * ck;
     mk.id = clav;
     ck = buscar<Dir>(mk , curs->sigs , criterio_carpeta);
@@ -220,6 +146,8 @@ void rmdir(string clav , Dir* curs){
     else{
         if(mk.sigs != nullptr){
             borrar<Dir>(mk , curs->sigs , criterio_carpeta);
+            mk >> r;
+            borrar<Regdir>(r , listac , criterio_nivel);
         }
         else{
             cout << "error: esta carpeta contiene otras carpetas adentro" << endl; // crear una forma recursiva de eliminarlas todas
@@ -228,20 +156,6 @@ void rmdir(string clav , Dir* curs){
 }
 
 
-void rmfile(string clav , Dir* curs, Nodo<File>* &listafls){
-    File mf;
-    Nodo<File> * ck;
-    mf.id = clav;
-    ck = buscar<File>(mf , curs->archs , criterio_arch);
-    if (!ck){
-        cout << "error: no se encontro el archivo" << endl;
-    }
-    else{
-        borrar<File>(mf , curs->archs , criterio_arch);
-        borrar<File>(mf , listafls , criterio_arch);
-        eliminar_archivo( curs , clav, listafls);
-    }
-}
 
 
 
@@ -249,7 +163,7 @@ void rmfile(string clav , Dir* curs, Nodo<File>* &listafls){
 void ls( Dir* curs){
     mostrar<Dir>(curs->sigs);
     cout << endl;
-    mostrar<File>(curs->archs);
+    //mostrar<File>(curs->archs);
 }
 
 
@@ -279,6 +193,160 @@ void cd (string clav , Dir* &curs , string &path){
     }
     
 }
+
+
+
+template <typename T > Nodo<T>* obtener_siguiente(int dato , Nodo<T>* lista){
+    int index = 0;
+    while(index < dato){
+        index++;
+        lista = lista->sig;
+        if(!lista){ // si lista es nullptr devuelve esto 
+            break;
+        }
+    }
+    return lista;
+}
+
+template<typename T> int obtener_cantidad(Nodo<T>* lista){
+    int count = 0;
+    while(lista){
+        lista = lista->sig;
+        count ++;
+    }
+    return count;
+}
+
+bool es_ultimo(Dir* rama){
+    bool resul = true;
+    while(rama){
+        if(rama->iter < obtener_cantidad<Dir>(rama->sigs)){
+            resul = false;
+            break;
+        }
+        rama = rama->anterior;
+    }
+    return resul;
+}
+
+
+
+void restaurar_arbol(Dir* root ){ // esta función permite poder recorrer el arbol indefinidamente
+    bool proxicorta = false;
+    while(true){ 
+        //cout << root->id << endl;
+        
+        if(obtener_siguiente(obtener_cantidad<Dir>(root->sigs)  -  root->iter , root->sigs)){
+            //cout << "Adelante" << endl << endl;
+            root = &obtener_siguiente(obtener_cantidad<Dir>(root->sigs)  -  root->iter , root->sigs)->dato;
+            root->anterior->iter --;
+
+        }
+        else{
+            //cout << "Atras" << endl << endl;
+            root = root->anterior;
+
+        }
+
+        if (proxicorta){
+            break;
+        } 
+
+        if(root->iter == 0 && !root->anterior){
+                proxicorta = true;
+        }
+        
+    }
+}
+
+
+
+void recorrer_arbol(Dir* root ){ 
+
+    bool proxicorta = false;
+    while(true){ 
+        cout << root->id << endl;
+        if(obtener_siguiente(root->iter , root->sigs)){
+            //cout << "Adelante" << endl << endl;
+            root = &obtener_siguiente(root->iter , root->sigs)->dato;
+            root->anterior->iter ++;
+
+        }
+        else{
+            //cout << "Atras" << endl << endl;
+            root = root->anterior;
+
+        }
+
+        if (proxicorta){
+            break;
+        } 
+
+        if(es_ultimo(root)){ 
+                proxicorta = true;
+        }
+        
+    }
+     restaurar_arbol(root);
+}
+
+
+
+
+
+
+
+// funcion que recorre toda la lista de carpetas y agrega las correspondientes a este directorio
+void rya_lista(Dir* &root , Nodo<Regdir>* listac ){
+    Nodo<Regdir>* load = nullptr; // puntero auxiliar para cuando se carga el arbol
+    Nodo<Regdir>* aux = listac;
+    while(aux){
+        if(aux->dato.anterior == root->id && aux->dato.nivel == root->nivel + 1){
+            mkdir(aux->dato.id , root , load);
+        }
+        aux = aux->sig;
+    }
+
+}
+
+
+// void recorrer_load() // función que por cada iteración del arbol ejecuta rya_lista (estructura de recorrer_arbol)
+
+
+
+void recorrer_load(Dir* &root , Nodo<Regdir>* listac ){ 
+
+    bool proxicorta = false;
+    while(true){ 
+        //cout << root->id << endl;
+        rya_lista(root , listac);
+        if(obtener_siguiente(root->iter , root->sigs)){
+            //cout << "Adelante" << endl << endl;
+            root = &obtener_siguiente(root->iter , root->sigs)->dato;
+            root->anterior->iter ++;
+
+        }
+        else{
+            //cout << "Atras" << endl << endl;
+            root = root->anterior;
+
+        }
+
+        if (proxicorta){
+            break;
+        } 
+
+        if(es_ultimo(root)){ 
+                proxicorta = true;
+        }
+        
+    }
+     restaurar_arbol(root);
+}
+
+
+
+
 
 
 #endif 
